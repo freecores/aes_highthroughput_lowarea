@@ -14,7 +14,7 @@
 //////////////////////////////////////////////////////////////////////
 module sbox(
 	clk,
-	reset_n,
+	reset,
 	enable,
 	din,
 	ende,
@@ -22,7 +22,7 @@ module sbox(
 	de_dout);
  
 input		clk;
-input		reset_n;
+input		reset;
 input		enable;
 input	[7:0]	din;
 input		ende;  //0: encryption;  1: decryption
@@ -39,9 +39,9 @@ assign first_matrix_in[7:0] = ende ? INV_AFFINE(din[7:0]): din[7:0];
 assign first_matrix_out[7:0] = GF256_TO_GF16(first_matrix_in[7:0]);
  
 // pipeline 1
-always @ (posedge clk or negedge reset_n)
+always @ (posedge clk or posedge reset)
 begin
-	if (!reset_n)
+	if (reset)
 		first_matrix_out_L[7:0] <= 8'b0;
 	else if (enable)
 		first_matrix_out_L[7:0] <= first_matrix_out[7:0];
@@ -81,9 +81,9 @@ assign p_new[3:0] = MUL(sumpq[3:0],inv_sump2q2[3:0]);
 assign q_new[3:0] = MUL(q[3:0],inv_sump2q2[3:0]);
  
 // pipeline 2
-always @ (posedge clk or negedge reset_n)
+always @ (posedge clk or posedge reset)
 begin
-	if (!reset_n)
+	if (reset)
 		{p_new_L[3:0],q_new_L[3:0]} <= 8'b0;
 	else if (enable)
 		{p_new_L[3:0],q_new_L[3:0]} <= {p_new[3:0],q_new[3:0]};

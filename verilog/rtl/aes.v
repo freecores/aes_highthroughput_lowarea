@@ -12,6 +12,11 @@
 ////      - Luo Dongjun,   dongjun_luo@hotmail.com                ////
 ////                                                              ////
 //////////////////////////////////////////////////////////////////////
+
+// uncomment the following define to enable use of distributed RAM implementation 
+// for XILINX FPGAs instead of block memory.
+`define XILINX		1 
+
 module aes (
    clk,
    reset,
@@ -82,7 +87,7 @@ for (i=0;i<16;i=i+1)
 begin : sbox_block
    sbox u_sbox (
       .clk(clk),
-      .reset_n(~reset),
+      .reset(reset),
       .enable(i_enable),
       .ende(i_ende),
       .din(o_data[i*8+7:i*8]),
@@ -209,7 +214,6 @@ end
 // 2 16*64 rams or 1 16*128 rams
 //
 //assign rd_addr[3:0] = i_ende ? (max_round[3:0] - sb_round_cnt2[3:0]) : sb_round_cnt2[3:0];
-`define XILINX		1 
 
 assign round_key[127:0] = {rd_data0[63:0],rd_data1[63:0]};
 
@@ -290,7 +294,7 @@ ram_16x64 u_ram_1
 //
 key_exp u_key_exp (
    .clk(clk),
-   .reset_n(~reset),
+   .reset(reset),
    .key_in(i_key[255:0]),
    .key_mode(i_key_mode[1:0]),
    .key_start(i_start),

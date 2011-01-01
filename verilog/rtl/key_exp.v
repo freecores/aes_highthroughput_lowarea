@@ -14,7 +14,7 @@
 //////////////////////////////////////////////////////////////////////
 module key_exp (
    clk,
-   reset_n,
+   reset,
    key_in,
    key_mode,
    key_start,
@@ -25,7 +25,7 @@ module key_exp (
 );
  
 input             clk;
-input             reset_n;
+input             reset;
 input   [255:0]   key_in;   // initial key value
 input   [1:0]     key_mode; // 0:128, 1:192, 2:256
 input             key_start;// start key expansion
@@ -64,9 +64,9 @@ parameter   IDLE       = 2'b00,
 assign max_round_p1[3:0] = (key_mode == 2'b00) ? 4'd11 : (key_mode == 2'b01 ? 4'd13 : 4'd15);
  
 // rcon generation
-always @ (posedge clk or negedge reset_n)
+always @ (posedge clk or posedge reset)
 begin
-   if (!reset_n)
+   if (reset)
    begin
       rcon[31:0] <= 32'h01000000;
       rcon_is_1b <= 1'b0;
@@ -97,9 +97,9 @@ end
 // State machine for Key expansion
 //
 //
-always @ (posedge clk or negedge reset_n)
+always @ (posedge clk or posedge reset)
 begin
-   if (!reset_n)   
+   if (reset)   
    begin
       state[1:0]  <= IDLE;
       pstate[1:0] <= IDLE;
@@ -146,9 +146,9 @@ begin
 end
  
 // round counter: 10/12/14
-always @ (posedge clk or negedge reset_n)
+always @ (posedge clk or posedge reset)
 begin
-   if (!reset_n)
+   if (reset)
       round[3:0] <= 1'b0;
    else if (nstate[1:0] == IDLE)
       round[3:0] <= 4'b0;
@@ -156,9 +156,9 @@ begin
       round[3:0] <= round[3:0] + 1'b1;
 end
  
-always @ (posedge clk or negedge reset_n)
+always @ (posedge clk or posedge reset)
 begin
-   if (!reset_n)
+   if (reset)
    begin
       sbox_in_valid <= 1'b0;
       sbox_in[31:0] <= 32'b0;
@@ -182,19 +182,19 @@ begin
       sbox_in_valid <= 1'b0;
 end
  
-always @ (posedge clk or negedge reset_n)
+always @ (posedge clk or posedge reset)
 begin
-   if (!reset_n)
+   if (reset)
       valid[4:0] <= 5'b0;
    else
       valid[4:0] <= {valid[3:0],sbox_in_valid};
 end
 assign sbox_out_valid = valid[1];
  
-sbox u_0(.clk(clk),.reset_n(reset_n),.enable(1'b1),.din(sbox_in[7:0]),.ende(1'b0),.en_dout(sbox_out[7:0]),.de_dout());
-sbox u_1(.clk(clk),.reset_n(reset_n),.enable(1'b1),.din(sbox_in[15:8]),.ende(1'b0),.en_dout(sbox_out[15:8]),.de_dout());
-sbox u_2(.clk(clk),.reset_n(reset_n),.enable(1'b1),.din(sbox_in[23:16]),.ende(1'b0),.en_dout(sbox_out[23:16]),.de_dout());
-sbox u_3(.clk(clk),.reset_n(reset_n),.enable(1'b1),.din(sbox_in[31:24]),.ende(1'b0),.en_dout(sbox_out[31:24]),.de_dout());
+sbox u_0(.clk(clk),.reset(reset),.enable(1'b1),.din(sbox_in[7:0]),.ende(1'b0),.en_dout(sbox_out[7:0]),.de_dout());
+sbox u_1(.clk(clk),.reset(reset),.enable(1'b1),.din(sbox_in[15:8]),.ende(1'b0),.en_dout(sbox_out[15:8]),.de_dout());
+sbox u_2(.clk(clk),.reset(reset),.enable(1'b1),.din(sbox_in[23:16]),.ende(1'b0),.en_dout(sbox_out[23:16]),.de_dout());
+sbox u_3(.clk(clk),.reset(reset),.enable(1'b1),.din(sbox_in[31:24]),.ende(1'b0),.en_dout(sbox_out[31:24]),.de_dout());
  
 /*****************************************************************************/
 // key expansion calculation
@@ -211,9 +211,9 @@ assign w5_next2[31:0] = w4_next2[31:0]^w5[31:0];
 assign w6_next[31:0] = w5_next2[31:0]^w6[31:0];
 assign w7_next[31:0] = w6_next[31:0]^w7[31:0];
  
-always @ (posedge clk or negedge reset_n)
+always @ (posedge clk or posedge reset)
 begin
-   if (!reset_n)
+   if (reset)
    begin
       {w0[31:0],w1[31:0],w2[31:0],w3[31:0],w4[31:0],w5[31:0],w6[31:0],w7[31:0]} <= 256'b0;
    end
@@ -265,9 +265,9 @@ assign wr_data1[63:0] = wr_256 ?{w4[31:0],w5[31:0]} : {w0[31:0],w1[31:0]};
 assign wr_data2[63:0] = wr_256 ?{w6[31:0],w7[31:0]} : {w2[31:0],w3[31:0]};
 assign wr_data3[63:0] = {w4[31:0],w5[31:0]};
  
-always @ (posedge clk or negedge reset_n)
+always @ (posedge clk or posedge reset)
 begin
-   if (!reset_n)
+   if (reset)
       wr_256 <= 1'b0;
    else if (key_start)
       wr_256 <= 1'b0;
@@ -277,25 +277,25 @@ begin
       wr_256 <= 1'b0;
 end
  
-always @ (posedge clk or negedge reset_n)
+always @ (posedge clk or posedge reset)
 begin
-   if (!reset_n)
+   if (reset)
       {key_start_L3,key_start_L2,key_start_L} <= 3'b0;
    else
       {key_start_L3,key_start_L2,key_start_L} <= {key_start_L2,key_start_L,key_start};
 end
  
-always @ (posedge clk or negedge reset_n)
+always @ (posedge clk or posedge reset)
 begin
-   if (!reset_n)
+   if (reset)
       wr <= 1'b0;
    else 
       wr <= wr1 || wr2 || wr3 || init_wr1 || init_wr2 || init_wr3 || init_wr4;
 end
  
-always @ (posedge clk or negedge reset_n)
+always @ (posedge clk or posedge reset)
 begin
-   if (!reset_n)
+   if (reset)
    begin
       wr_data[63:0] <= 64'b0;
    end
@@ -318,9 +318,9 @@ begin
    end
 end
  
-always @ (posedge clk or negedge reset_n)
+always @ (posedge clk or posedge reset)
 begin
-   if (!reset_n)
+   if (reset)
       wr_addr[4:0] <= 5'b0;
    else if (key_start)
       wr_addr[4:0] <= 5'd0;
@@ -328,9 +328,9 @@ begin
       wr_addr[4:0] <= wr_addr[4:0] + 1'b1;
 end
  
-always @ (posedge clk or negedge reset_n)
+always @ (posedge clk or posedge reset)
 begin
-   if (!reset_n)
+   if (reset)
       key_ready <= 1'b0;
    else if (key_start)
       key_ready <= 1'b0;

@@ -2,7 +2,7 @@
 module tb ();
 
 reg clk;
-reg reset_n;
+reg reset;
 reg [7:0] din;
 wire [7:0] dout;
 
@@ -19,10 +19,10 @@ begin
 	key_in = 1'b0;
 	key_start = 1'b0;
         data_in_valid = 1'b0;
-	reset_n = 1'b0;
+	reset = 1'b1;
 	enable = 1;
 	#100;
-	reset_n = 1'b1;
+	reset = 1'b0;
 	#100;
 	din = 8'hae;
 	@ (posedge clk);
@@ -83,7 +83,7 @@ end
 wire [127:0] data_out;
 aes dut(
    .clk(clk),
-   .reset_n(reset_n),
+   .reset(reset),
    .i_start(key_start),
    .i_enable(enable), //TBD
    .i_ende(1'b1),
