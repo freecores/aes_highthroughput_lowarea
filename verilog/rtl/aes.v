@@ -1,52 +1,52 @@
-//////////////////////////////////////////////////////////////////////
-////                                                              ////
-////  AES top file                                                ////
-////                                                              ////
-////  Description:                                                ////
-////  AES top                                                     ////
-////                                                              ////
-////  To Do:                                                      ////
-////   - done                                                     ////
-////                                                              ////
-////  Author(s):                                                  ////
-////      - Luo Dongjun,   dongjun_luo@hotmail.com                ////
-////                                                              ////
-//////////////////////////////////////////////////////////////////////
+//---------------------------------------------------------------------------------------
+// 
+//	AES core top module 
+// 
+//	Description: 
+//		AES core top module with direct interface to key and data buses. 
+// 
+//	To Do: 
+//		- done 
+//
+//	Author(s):
+//		- Luo Dongjun,   dongjun_luo@hotmail.com 
+//
+//---------------------------------------------------------------------------------------
 
 // uncomment the following define to enable use of distributed RAM implementation 
 // for XILINX FPGAs instead of block memory.
+// NOTE: when commenting the following define, core size is slightly smaller but maximum 
+// achievable clock frequency is also slightly lower. 
 `define XILINX		1 
 
 module aes (
-   clk,
-   reset,
-   i_start,
-   i_enable,
-   i_ende,
-   i_key,
-   i_key_mode,
-   i_data,
-   i_data_valid,
-   o_ready,
-   o_data,
-   o_data_valid,
-   o_key_ready
+	clk, reset,
+	i_start, i_enable,
+	i_ende, i_key,
+	i_key_mode, i_data,
+	i_data_valid, o_ready, 
+	o_data, o_data_valid, 
+	o_key_ready
 );
  
-input         clk;
-input         reset;
-input         i_start;
-input         i_enable;
-input [1:0]   i_key_mode; // 0: 128; 1: 192; 2: 256
-input [255:0] i_key; // if key size is 128/192, upper bits are the inputs
-input [127:0] i_data;
-input         i_data_valid;
-input         i_ende; // 0: encryption; 1: decryption
-output         o_ready; // user shall not input data if IP is not ready
-output [127:0] o_data; // output data 
-output         o_data_valid;
-output         o_key_ready; // key expansion procedure completes
- 
+//---------------------------------------------------------------------------------------
+// module interfaces 
+input			clk;		// core global clock 
+input			reset;		// core global async reset control 
+input			i_start;	// key expansion start pulse 
+input			i_enable;	// enable encryption / decryption core operation 
+input	[1:0]	i_key_mode; // key length: 0 => 128; 1 => 192; 2 => 256
+input	[255:0]	i_key; 		// if key size is 128/192, upper bits are the inputs 
+input	[127:0]	i_data;		// plain/cipher text data input 
+input			i_data_valid;	// data input valid 
+input			i_ende;		// core mode of operation: 0 => encryption; 1 => decryption
+output			o_ready;	// indicates core is ready for new input data at the next clock cycle 
+output	[127:0]	o_data;		// data output 
+output			o_data_valid;	// data output valid 
+output			o_key_ready;	// key expansion procedure done 
+
+//---------------------------------------------------------------------------------------
+// module registers and signals 
 genvar i;
 wire           final_round;
 reg   [3:0]    max_round;
@@ -63,7 +63,9 @@ wire           wr;
 wire  [4:0]    wr_addr;
 wire  [63:0]   wr_data;
 wire  [127:0]  imc_round_key,en_ark_data,de_ark_data,ark_data_final,ark_data_init;
- 
+
+//---------------------------------------------------------------------------------------
+// module implementation 
 assign final_round = sb_round_cnt3[3:0] == max_round[3:0];
 //assign o_ready = ~sb_valid[1]; // if ready is asserted, user can input data for the same cycle
 assign o_ready = ~sb_valid[0]; // if ready is asserted, user can input data for the next cycle
@@ -78,7 +80,7 @@ begin
    endcase
 end
  
-/*****************************************************************************/
+//---------------------------------------------------------------------------------------
 // Sub Bytes
 //
 //
@@ -105,7 +107,7 @@ begin
       sb_data[127:0] <= i_ende ? de_sb_data[127:0] : en_sb_data[127:0];
 end
  
-/*****************************************************************************/
+//---------------------------------------------------------------------------------------
 // Shift Rows
 //
 //
@@ -116,7 +118,7 @@ inv_shift_rows u_ishrows (.si(sb_data[127:0]), .so(ishrows));
 
 assign sr_data[127:0] = i_ende ? ishrows : shrows;
  
-/*****************************************************************************/
+//---------------------------------------------------------------------------------------
 // Mix Columns
 //
 //
@@ -136,13 +138,13 @@ begin
    end
 end
  
-/*****************************************************************************/
+//---------------------------------------------------------------------------------------
 // Inverse Mix Columns
 //
 //
 inv_mix_columns imxc_u (.in(sr_data), .out(imc_data));
 
-/*****************************************************************************/
+//---------------------------------------------------------------------------------------
 // add round key for decryption
 //
 inv_mix_columns imxk_u (.in(round_key), .out(imc_round_key));
@@ -155,7 +157,7 @@ assign ark_data[127:0] = i_data_valid_L ? ark_data_init[127:0] :
                            (final_round ? ark_data_final[127:0] : 
                                 (i_ende ? de_ark_data[127:0] : en_ark_data[127:0]));
  
-/*****************************************************************************/
+//---------------------------------------------------------------------------------------
 // Data outputs after each round
 //
 always @ (posedge clk or posedge reset)
@@ -166,7 +168,7 @@ begin
       o_data[127:0] <= ark_data[127:0];
 end
  
-/*****************************************************************************/
+//---------------------------------------------------------------------------------------
 // in sbox, we have 3 stages (sb_valid),
 // before the end of each round, we have another stage (round_valid)
 //
@@ -209,7 +211,7 @@ begin
    end
 end
  
-/*****************************************************************************/
+//---------------------------------------------------------------------------------------
 // round key generation: the expansion keys are stored in 4 16*32 rams or 
 // 2 16*64 rams or 1 16*128 rams
 //
@@ -288,7 +290,7 @@ ram_16x64 u_ram_1
 	.rd(sb_valid[1] | i_data_valid)
 );
 `endif 
-/*****************************************************************************/
+//---------------------------------------------------------------------------------------
 // Key Expansion module
 //
 //
@@ -305,4 +307,4 @@ key_exp u_key_exp (
 );
  
 endmodule
-/*****************************************************************************/
+//---------------------------------------------------------------------------------------

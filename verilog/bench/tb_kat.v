@@ -1,4 +1,26 @@
+//---------------------------------------------------------------------------------------
+//	Project:			High Throughput & Low Area AES Core 
+//
+//	File name:			tb_kat.v 			(Jan 1, 2011)
+//
+//	Writer:				Moti Litochevski 
+//
+//	Description:
+//		This file contains the core test bench to check compatibility with the Known 
+//		Answer Test (KAT) vectors. The test bench runs all files listed in the 
+//		"KAT_files.txt" file. 
+//		Note that only ECB mode test vectors should be included since other modes require 
+//		additional logic to be implemented around the AES algorithm core. 
+//
+//	Revision History:
+//
+//	Rev <revnumber>			<Date>			<owner> 
+//		<comment>
+// 
+//---------------------------------------------------------------------------------------
+
 `timescale 1ns / 10ps
+
 module test ();
 
 // define input list file name 
@@ -18,6 +40,7 @@ module test ();
 `define	CHAR_f			8'h66
 `define CHAR_z			8'h7A
 
+//---------------------------------------------------------------------------------------
 // test bench signals 
 reg clk;
 reg reset;
@@ -119,6 +142,8 @@ begin
 end 
 endfunction
 
+//---------------------------------------------------------------------------------------
+// test bench implementation 
 // global clock generator 
 initial		clk = 1'b1;
 always 		#10 clk = ~clk;
@@ -451,3 +476,6 @@ always @ (posedge clk)
 		$display("Data Out:    %16h",data_out);
 
 endmodule
+//---------------------------------------------------------------------------------------
+//						Th.. Th.. Th.. Thats all folks !!!
+//---------------------------------------------------------------------------------------

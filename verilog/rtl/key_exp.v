@@ -200,16 +200,16 @@ sbox u_3(.clk(clk),.reset(reset),.enable(1'b1),.din(sbox_in[31:24]),.ende(1'b0),
 // key expansion calculation
 //
 //
-assign w0_next[31:0] = sbox_out[31:0]^rcon[31:0]^w0[31:0];
-assign w1_next[31:0] = w0_next[31:0]^w1[31:0];
-assign w2_next[31:0] = w1_next[31:0]^w2[31:0];
-assign w3_next[31:0] = w2_next[31:0]^w3[31:0];
-assign w4_next1[31:0] = w3_next[31:0] ^ w4[31:0];
-assign w5_next1[31:0] = w4_next1[31:0]^w5[31:0];
+assign w0_next[31:0]  = sbox_out[31:0] ^ rcon[31:0]^w0[31:0];
+assign w1_next[31:0]  = w0_next[31:0]  ^ w1[31:0];
+assign w2_next[31:0]  = w1_next[31:0]  ^ w2[31:0];
+assign w3_next[31:0]  = w2_next[31:0]  ^ w3[31:0];
+assign w4_next1[31:0] = w3_next[31:0]  ^ w4[31:0];
+assign w5_next1[31:0] = w4_next1[31:0] ^ w5[31:0];
 assign w4_next2[31:0] = sbox_out[31:0] ^ w4[31:0];
-assign w5_next2[31:0] = w4_next2[31:0]^w5[31:0];
-assign w6_next[31:0] = w5_next2[31:0]^w6[31:0];
-assign w7_next[31:0] = w6_next[31:0]^w7[31:0];
+assign w5_next2[31:0] = w4_next2[31:0] ^ w5[31:0];
+assign w6_next[31:0]  = w5_next2[31:0] ^ w6[31:0];
+assign w7_next[31:0]  = w6_next[31:0]  ^ w7[31:0];
  
 always @ (posedge clk or posedge reset)
 begin

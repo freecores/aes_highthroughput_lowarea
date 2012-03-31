@@ -1,0 +1,104 @@
+
+-------------------------------------
+        AES_HT_LA Simulation
+-------------------------------------
+
+VCD info: dumpfile test.vcd opened for output.
+
+Testing encryption for 128 bit key:
+-------------------------------------
+Key: 128'h2b7e151628aed2a6abf7158809cf4f3c
+Key expansion done
+
+Plaintext Data 1: 128'hdda97ca4864cdfe06eaf70a0ec0d7191
+Plaintext Data 2: 128'h3243f6a8885a308d313198a2e0370731
+Plaintext Data 3: 128'h00112233445566778899aabbccddeeff
+Plaintext Data 4: 128'h8ea2b7ca516745bfeafc49904b496089
+
+Waiting for cipher text data
+Output Data 1: 128'hef0bc156ed8ff21223f247b3e0318a99
+Output Data 2: 128'hf91914cd01924b124c2ec316b4b35a79
+Output Data 3: 128'h8df4e9aac5c7573a27d8d055d6e4d64b
+Output Data 4: 128'hec8ce641087165a463d4118dc35f9001
+
+Testing decryption for 128 bit key:
+-------------------------------------
+Key: 128'h2b7e151628aed2a6abf7158809cf4f3c
+Using the same key, expansion is not required.
+
+Ciphertext Data 1: 128'hef0bc156ed8ff21223f247b3e0318a99
+Ciphertext Data 2: 128'hf91914cd01924b124c2ec316b4b35a79
+Ciphertext Data 3: 128'h8df4e9aac5c7573a27d8d055d6e4d64b
+Ciphertext Data 4: 128'hec8ce641087165a463d4118dc35f9001
+
+Waiting for plain text data
+Output Data 1: 128'hdda97ca4864cdfe06eaf70a0ec0d7191
+Output Data 2: 128'h3243f6a8885a308d313198a2e0370731
+Output Data 3: 128'h00112233445566778899aabbccddeeff
+Output Data 4: 128'h8ea2b7ca516745bfeafc49904b496089
+
+Testing encryption for 192 bit key:
+-------------------------------------
+Key: 192'h8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b
+Key expansion done
+
+Plaintext Data 1: 128'hdda97ca4864cdfe06eaf70a0ec0d7191
+Plaintext Data 2: 128'h3243f6a8885a308d313198a2e0370731
+Plaintext Data 3: 128'h00112233445566778899aabbccddeeff
+Plaintext Data 4: 128'h8ea2b7ca516745bfeafc49904b496089
+
+Waiting for cipher text data
+Output Data 1: 128'h17d3cbb6a98f64ccd134e0d0b7695aa9
+Output Data 2: 128'h4a7d86377de2a8faf00f8ef97c2eb982
+Output Data 3: 128'heb1b03f2acb64bcf28c9991cc8a4fa50
+Output Data 4: 128'h2adc503e1c9b669de6b5bc904035547d
+
+Testing decryption for 192 bit key:
+-------------------------------------
+Key: 192'h8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b
+Using the same key, expansion is not required.
+
+Ciphertext Data 1: 128'h17d3cbb6a98f64ccd134e0d0b7695aa9
+Ciphertext Data 2: 128'h4a7d86377de2a8faf00f8ef97c2eb982
+Ciphertext Data 3: 128'heb1b03f2acb64bcf28c9991cc8a4fa50
+Ciphertext Data 4: 128'h2adc503e1c9b669de6b5bc904035547d
+
+Waiting for plain text data
+Output Data 1: 128'hdda97ca4864cdfe06eaf70a0ec0d7191
+Output Data 2: 128'h3243f6a8885a308d313198a2e0370731
+Output Data 3: 128'h00112233445566778899aabbccddeeff
+Output Data 4: 128'h8ea2b7ca516745bfeafc49904b496089
+
+Testing encryption for 256 bit key:
+-------------------------------------
+Key: 256'h603deb1015ca71be2b73aef0857d77811f352c073b6108d7
+Key expansion done
+
+Plaintext Data 1: 128'hdda97ca4864cdfe06eaf70a0ec0d7191
+Plaintext Data 2: 128'h3243f6a8885a308d313198a2e0370731
+Plaintext Data 3: 128'h00112233445566778899aabbccddeeff
+Plaintext Data 4: 128'h8ea2b7ca516745bfeafc49904b496089
+
+Waiting for cipher text data
+Output Data 1: 128'h32573d9003bfd345029779298be53b96
+Output Data 2: 128'ha5f464b57512d05db2bae8d2415b921d
+Output Data 3: 128'hd83414223d20a0c928b136c884d07ea2
+Output Data 4: 128'hc1f968d2a6859137bd9ad9111ad7f6dc
+
+Testing decryption for 256 bit key:
+-------------------------------------
+Key: 256'h603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4
+Using the same key, expansion is not required.
+
+Ciphertext Data 1: 128'h32573d9003bfd345029779298be53b96
+Ciphertext Data 2: 128'ha5f464b57512d05db2bae8d2415b921d
+Ciphertext Data 3: 128'hd83414223d20a0c928b136c884d07ea2
+Ciphertext Data 4: 128'hc1f968d2a6859137bd9ad9111ad7f6dc
+
+Waiting for plain text data
+Output Data 1: 128'hdda97ca4864cdfe06eaf70a0ec0d7191
+Output Data 2: 128'h3243f6a8885a308d313198a2e0370731
+Output Data 3: 128'h00112233445566778899aabbccddeeff
+Output Data 4: 128'h8ea2b7ca516745bfeafc49904b496089
+
+   Simulation Done !!!

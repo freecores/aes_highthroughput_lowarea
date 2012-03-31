@@ -30,8 +30,6 @@ begin
       mem[wr_addr] <= wr_data;
 end
  
-//MOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTI
-
 reg [3:0] srd_addr;
 
 always @ (posedge clk)
@@ -41,15 +39,5 @@ begin
 end 
 
 assign rd_data = mem[srd_addr];
-
-//MOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTI
-
-// always @ (posedge clk)
-// begin
-//    if (rd)
-//       rd_data <= mem[rd_addr];
-// end
-
-//MOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTIMOTI
 
 endmodule
