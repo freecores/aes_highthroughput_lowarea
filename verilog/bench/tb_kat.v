@@ -28,6 +28,7 @@ module test ();
 
 // global definitions 
 `define EOF				-1
+`define EOF16			16'hffff
 `define CHAR_CR			8'h0d
 `define CHAR_LF			8'h0a
 `define CHAR_0			8'h30
@@ -226,7 +227,7 @@ begin
 		
 		// repeat reading the file till end of file 
 		param_name = fgetfield(infid);
-		while (param_name != `EOF) 
+		while (param_name != `EOF16) 
 		begin 
 			// clear test start flag 
 			test_start = 0;
